@@ -1,0 +1,19 @@
+name: CD
+on: workflow_dispatch
+jobs:
+  cd:
+    name: CD
+    runs-on: ubuntu-latest
+    environment: Dev 1
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: ./.github/actions/deploy
+        with:
+          AWS_ROLE: ${{ secrets.AWS_ROLE }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_S3_URI: ${{ secrets.AWS_S3_URI }}
+  

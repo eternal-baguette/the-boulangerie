@@ -1,0 +1,20 @@
+name: Deploy
+description: Deploy the repo
+inputs:
+    AWS_ROLE:
+        description: The AWS role name to assume using OIDC. This role should have the necesary privileges to deploy the repo.
+    AWS_REGION:
+        description: The AWS region in which to deploy the repo.
+    AWS_S3_URI:
+        description: The AWS S3 URI where to deploy the repo.
+runs:
+    using: composite
+    steps:
+        - name: Configure AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v2
+          with:
+              role-to-assume: ${{ inputs.AWS_ROLE }}
+              aws-region: ${{ inputs.AWS_REGION }}
+        - name: Push repo to S3 URI
+          shell: bash
+          run: aws s3 sync ./dist ${{ inputs.AWS_S3_URI }}
